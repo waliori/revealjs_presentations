@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Présentation du Pipeline de Données - Moov AI</title>
+
+    <meta name="description" content="Présentation du pipeline de données pour le système de recommandation musical">
+    <meta name="author" content="[Votre Nom]">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Références aux fichiers CSS de reveal.js -->
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/white.css" id="theme">
+
+    <!-- Thème pour la coloration syntaxique du code -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css">
+	<style>
+		.mermaid-test svg {
+			max-height: 400px !important;
+		}
+	</style>
+</head>
+
+<body>
+
+    <div class="reveal">
+
+        <!-- Conteneur des slides -->
+        <div class="slides">
+            <!-- Slide 1: Titre -->
+            <section>
+                <h1>Pipeline de Données</h1>
+                <h4>Système de Recommandation Musical</h4>
+                <p><small>Walid - Développeur Data Senior</small></p>
+                <!-- Optionnel : Logo de l'entreprise -->
+                <img src="https://moov.ai/wp-content/uploads/2021/06/moov-ai-logo-1.svg" alt="Logo Moov AI" style="width: 150px; height: auto;">
+            </section>
+
+            <!-- Slide 2: Introduction -->
+            <section>
+                <h2>Introduction</h2>
+				<img src="dist/imgs/recommendation system.jpg" alt="" style="height: auto;"><br>
+				<small><a href="https://cyanite.ai/2021/09/02/how-do-ai-music-recommendation-systems-work/" target="_blank">source</a></small>
+            </section>
+
+            <!-- Slide 3: Objectifs du Projet -->
+			<section>
+				<section id="fragments">
+					<h2>Objectifs</h2>
+					<p>Personnalisation des playlists</p>
+					<p>Automatisation de l'ingestion des données</p>
+				</section>
+			</section>
+			<section>
+				<h2>Données</h2>
+				<h4>Analyse</h4>
+				<table>
+					<thead>
+						<tr>
+							<th>Critère</th>
+							<th>Valeur</th>
+							<th>Commentaire</th>
+						</tr>
+					</thead>
+					<tbody style="font-size: x-large;">
+						<tr>
+							<td>Volume</td>
+							<td>Faible</td>
+							<td>Le volume de données des utilisateurs et des titres est relativement faible malgré l'augmentation journalière.</td>
+						</tr>
+						<tr>
+							<td>Vélocité</td>
+							<td>Faible</td>
+							<td>La fréquence de mise à jour quotidienne suggère un flux de données constant mais pas en temps réel</td>
+						</tr>
+						<tr>
+							<td>Variété</td>
+							<td>Faible</td>
+							<td>Des profils d'utilisateurs, des métadonnées de chansons et l'historique d'écoute, la variété de données est faible (nous traitons principalement des données structurées)</td>
+						</tr>
+						<tr>
+							<td>Valeur</td>
+							<td>élevée</td>
+							<td>Données sont cruciales pour fournir des recommandations</td>
+						</tr>
+						<tr>
+							<td>Véracité</td>
+							<td>élevée</td>
+							<td>Provenant d'un système contrôlé, la véracité des données est élevée</td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+			<section>
+				
+				<section data-auto-animate>
+					<h2>System de Recommendation musical</h2>
+					<h4>Caractéristiques utiles</h4>
+					<h5 data-id="code-title">Utilisateur</h5>
+					<pre data-id="code-animation"><code class="hljs json" data-trim data-line-numbers="|2,6-8"><script type="text/template">
+						{
+							"id": 93944,
+							"first_name": "Linda",
+							"last_name": "Hood",
+							"email": "nicholas12@example.com",
+							"gender": "Male",
+							"favorite_genres": "Reggae",
+							"created_at": "2023-03-03T18:02:17.499204", //age du compte
+							"updated_at": "2025-01-27T07:05:49.815242"
+						 }
+					</script></code></pre>
+				</section>
+				<section data-auto-animate>
+					<h2>System de Recommendation musical</h2>
+					<h4>Caractéristiques utiles</h4>
+					<h5 data-id="code-title">Musiques</h5>
+					<pre data-id="code-animation"><code class="hljs json" data-trim data-line-numbers="|2-8"><script type="text/template">
+						{
+							"id": 41862,
+							"name": "live",
+							"artist": "Austin Martinez",
+							"songwriters": "Darrell Rodriguez",
+							"duration": "39:16",
+							"genres": "Electronic",
+							"album": "onto",
+							"created_at": "2025-08-04T16:54:38.210070",
+							"updated_at": "2023-11-07T20:47:13.090248"
+						 }
+					</script></code></pre>
+				</section>
+				<section data-auto-animate>
+					<h2>System de Recommendation musical</h2>
+					<h4>Caractéristiques utiles</h4>
+					<h5 data-id="code-title">Historiques des Écoutes</h5>
+					<pre data-id="code-animation"><code class="hljs json" data-trim data-line-numbers="|2-9,11"><script type="text/template">
+						{
+							"user_id": 93944,
+							"items": [
+							   33607,
+							   88331,
+							   20271,
+							   63706,
+							   18262
+							],
+							"created_at": "2024-08-16T15:33:00.394626",
+							"updated_at": "2024-12-09T12:33:57.290258"
+						 }
+					</script></code></pre>
+				</section>
+				<section data-auto-animate>
+					<h2>System de Recommendation musical</h2>
+					<h4>Caractéristiques utiles</h4>
+					<h5 data-id="code-title">caractéristiques Dérivées</h5>
+					<p>
+						<ul style="font-size: x-large;">
+							<li>Meilleurs Artistes de l'Utilisateur : Basé sur l'historique d'écoute</li>
+							<li>Meilleurs Genres de l'Utilisateur : Combinaison des genres favoris et de l'historique d'écoute</li>
+							<li>Popularité du Morceau : Fréquence d'apparition d'un morceau dans les historiques d'écoute</li>
+							<li>Popularité de l'Artiste : Fréquence d'écoute des morceaux d'un artiste</li>
+							<li>Popularité du Genre : Popularité globale des différents genres</li>
+						</ul>
+					</p>
+				</section>
+				<section data-auto-animate>
+					<h2>System de Recommendation musical</h2>
+					<h4>Caractéristiques utiles</h4>
+					<h5 data-id="code-title">caractéristiques Basées sur le Contenu</h5>
+					<p>
+						<ul style="font-size: x-large;">
+							<li>Similarité de Genre : Entre les morceaux et les préférences de l'utilisateur</li>
+							<li>Similarité d'Artiste : Basée sur les genres partagés ou la co-occurrence dans les historiques des utilisateurs</li>
+							<li>Similarité Textuelle du Nom du Morceau et du Nom de l'Artiste : Pour les recommandations basées sur le texte						  </li>
+						</ul>
+					</p>
+				</section>
+				<section data-auto-animate>
+					<h2>System de Recommendation musical</h2>
+					<h4>Caractéristiques utiles</h4>
+					<h5 data-id="code-title">caractéristiques de Filtrage Collaboratif</h5>
+					<p>
+						<ul style="font-size: x-large;">
+							<li>Similarité Utilisateur-Utilisateur : Basée sur les historiques d'écoute partagés</li>
+							<li>Similarité Morceau-Morceau : Basée sur la co-occurrence dans les historiques des utilisateurs</li>
+						</ul>
+					</p>
+				</section>
+			</section>
+			<section data-auto-animate>
+				<h2>Schéma de données proposé</h2>
+				<h4>Au moins en troisième Forme Normale (3NF)</h4>
+				<div class="mermaid mermaid-test">
+					<pre>
+						erDiagram
+    USERS {
+        int id PK
+        string first_name
+        string last_name
+        string email
+        string gender
+        datetime created_at
+        datetime updated_at
+    }
+    GENRES {
+        int id PK
+        string name
+    }
+    USER_FAVORITE_GENRES {
+        int user_id FK
+        int genre_id FK
+    }
+    ARTISTS {
+        int id PK
+        string name
+    }
+    TRACKS {
+        int id PK
+        string name
+        int artist_id FK
+        int duration
+        string album
+        datetime created_at
+        datetime updated_at
+    }
+    TRACK_GENRES {
+        int track_id FK
+        int genre_id FK
+    }
+    SONGWRITERS {
+        int id PK
+        string name
+    }
+    TRACK_SONGWRITERS {
+        int track_id FK
+        int songwriter_id FK
+    }
+    LISTEN_EVENTS {
+        int id PK
+        int user_id FK
+        int track_id FK
+        datetime listened_at
+    }
+
+
+    USERS ||--o{ USER_FAVORITE_GENRES : has
+    USERS ||--o{ LISTEN_EVENTS : performs
+    TRACKS ||--o{ LISTEN_EVENTS : included_in
+    GENRES ||--o{ USER_FAVORITE_GENRES : categorizes
+    ARTISTS ||--o{ TRACKS : creates
+    TRACKS ||--o{ TRACK_GENRES : has
+    GENRES ||--o{ TRACK_GENRES : categorizes
+    SONGWRITERS ||--o{ TRACK_SONGWRITERS : writes
+    TRACKS ||--o{ TRACK_SONGWRITERS : written_by
+					</pre>
+				</div>
+			</section>
+            <!-- Slide 4: Aperçu Général de la Solution -->
+            <section>
+                <h2>Apercu General</h2>
+				<p>Distinction entre le prototype et le pipeline de production</p>
+				<img src="dist/imgs/2.webp" alt="" style="height: auto;"><br>
+				<small><a href="https://www.ideatolife.com.au/post/prototype-vs-production" target="_blank">source</a></small>
+            </section>
+			<!-- Présentation du Prototype -->
+			<section>
+				<section>
+					<h2>Le Prototype</h2>
+					<h4>Objectifs</h4>
+					<img src="dist/imgs/objectif.webp" alt="">
+					<small><a href="https://capsurvous.com/objectifs-pedagogiques-finaux-et-intermediaires/" target="_blank">source</a></small>
+				</section>
+					
+			</section>
+			<section>
+				<h2>Le Prototype</h2>
+				<h4>Implémentation</h4>
+				<img src="dist/imgs/etl.webp" alt="">
+				<small><a href="https://www.datachannel.co/blogs/what-is-etl-and-how-the-etl-process-works" target="_blank">source</a></small>
+			</section>	
+			<section>
+				<h2>Le Prototype</h2>
+				<h4>Implémentation - Extraction</h4>
+				<section class="mermaid">
+					<pre>
+						flowchart LR
+						A[Démarrage Pipeline] --> B[Initialisation]
+						B --> C{Démarrage à froid?}
+						C -->|Oui| D[Récupérer toutes les données]
+						C -->|Non| E[Récupérer données depuis dernière exécution]
+						D & E --> F[Extraction API]
+						subgraph Extraction ["Extraction des Données"]
+							F --> G[Utilisateurs]
+							F --> H[Chansons]
+							F --> I[Historiques d'écoute]
+						end
+						Extraction --> J[Filtrage par date de mise à jour]
+						J --> K[Vers Transformation]
+
+						classDef default fill:#f9f9f9,stroke:#333,stroke-width:2px
+						classDef process fill:#d4f1f4,stroke:#05445E,stroke-width:2px
+						classDef decision fill:#ffedda,stroke:#ff6e40,stroke-width:2px
+						classDef io fill:#e0ffe0,stroke:#006400,stroke-width:2px
+						classDef subgraph_style fill:#e6f3ff,stroke:#0066cc,stroke-width:4px
+						class A,B,D,E,J,K process
+						class C decision
+						class F,G,H,I io
+						class Extraction subgraph_style
+					</pre>
+				</section>
+			</section>
+			<section>
+				<h2>Le Prototype</h2>
+				<h4>Implémentation - Transformation</h4>
+				<br>
+				<span class="mermaid mermaid-test">
+					<pre>
+						flowchart LR
+						A[Données Extraites] --> B[Transformation]
+						subgraph Transformation ["Transformation des Données"]
+							B --> C[Users]
+							B --> D[Tracks]
+							B --> E[Artists]
+							B --> F[Songwriters]
+							B --> G[Genres]
+							B --> H[Listen_Events]
+							B --> I[User_Favorite_Genres]
+							B --> J[Track_Genres]
+							B --> K[Track_Songwriters]
+						end
+						Transformation --> L[Validation]
+						L --> M{Données Valides?}
+						M -->|Oui| N[Création DataPayload]
+						M -->|Non| O[Gestion Erreurs]
+						O --> P[Correction]
+						P --> L
+						N --> Q[Vers Stockage]
+					
+						classDef default fill:#f9f9f9,stroke:#333,stroke-width:2px
+						classDef process fill:#d4f1f4,stroke:#05445E,stroke-width:2px
+						classDef decision fill:#ffedda,stroke:#ff6e40,stroke-width:2px
+						classDef io fill:#e0ffe0,stroke:#006400,stroke-width:2px
+						classDef subgraph_style fill:#e6f3ff,stroke:#0066cc,stroke-width:4px
+						class A,B,H,N,O,P,L,Q process
+						class M decision
+						class C,D,E,F,G,H,I,J,K io
+						class Transformation subgraph_style
+					</pre>
+				</span>
+			</section>
+			<section>
+				<h2>Le Prototype</h2>
+				<h4>Implémentation - Stockage</h4>
+				<section class="mermaid">
+					<pre>
+						flowchart LR
+    A[Données Transformées] --> B[DataStorage: Store Data]
+    subgraph DataStorage ["Stockage des Données"]
+        B --> C{Fichier Existant?}
+        C -->|Oui| D[Charger Données Existantes]
+        C -->|Non| E[Créer Nouveau Fichier]
+        D & E --> F[Fusion des Données]
+        subgraph MergeProcess ["Processus de Fusion"]
+            F --> G{Type de Données?}
+            G -->|Clé Unique| H[Fusion Données Clé Unique]
+            G -->|Clé Composite| I[Fusion Données Clé Composite]
+            H & I --> J{Entrée Existante?}
+            J -->|Oui| K{Mise à jour nécessaire?}
+            J -->|Non| L[Ajouter Nouvelle Entrée]
+            K -->|Oui| M[Mettre à jour Existant]
+            K -->|Non| N[Conserver Existant]
+        end
+    end
+    M & N & L --> O[Écrire Données Mises à jour en JSON]
+    O --> P[Mise à jour Date Dernière Exécution]
+    P --> Q[Attendre Prochain Cycle]
+
+    classDef default fill:#f9f9f9,stroke:#333,stroke-width:2px
+    classDef process fill:#d4f1f4,stroke:#05445E,stroke-width:2px
+    classDef decision fill:#ffedda,stroke:#ff6e40,stroke-width:2px
+    classDef io fill:#e0ffe0,stroke:#006400,stroke-width:2px
+    classDef subgraph_style fill:#e6f3ff,stroke:#0066cc,stroke-width:4px
+    class A,B,D,E,F,H,I,L,M,N,O,P,Q process
+    class C,G,J,K decision
+    class DataStorage,MergeProcess subgraph_style
+					</pre>
+				</section>
+			</section>    
+			<section>
+				<h2>Le Prototype</h2>
+				<h4>Implémentation - Gestion Erreurs</h4>
+				<section class="mermaid">
+					<pre>
+						flowchart LR
+						A[Exécution Pipeline] --> B{Erreur Détectée?}
+						B -->|Non| C[Continuer Traitement]
+						B -->|Oui| D[Journalisation Erreur]
+						D --> E{Type d'Erreur}
+						E --> F[Connexion]
+						E --> G[Récupération Données]
+						E --> H[Transformation]
+						E --> I[Stockage]
+						F --> J[Réessai avec Backoff]
+						G & H & I --> K[Gestion Spécifique]
+						J & K --> L[Mise à Jour Statistiques]
+						L --> M[Rapport d'Erreurs]
+						M --> N[Notification si Critique]
+
+						classDef default fill:#f9f9f9,stroke:#333,stroke-width:2px
+						classDef process fill:#d4f1f4,stroke:#05445E,stroke-width:2px
+						classDef decision fill:#ffedda,stroke:#ff6e40,stroke-width:2px
+						classDef io fill:#e0ffe0,stroke:#006400,stroke-width:2px
+						class A,C,D,F,G,H,I,J,K,L,M,N process
+						class B,E decision
+					</pre>
+				</section>
+			</section>
+			<section>
+				<h2>Le Prototype</h2>
+				<h4>Tests unitaires</h4>
+				<div class="mermaid">
+					<pre>
+						classDiagram
+    class Test_Client_API {
+        +test_get_tracks()
+        +test_get_paginated_data_with_multiple_pages()
+        +test_api_down()
+        +test_unexpected_response_structure()
+        +test_fetch_all_data()
+        +test_fetch_all_data_with_api_errors()
+        +test_fetch_all_data_with_incorrect_data()
+    }
+
+    class Test_Data_Storage {
+        +test_store_data()
+        +test_store_data_empty()
+        +test_merge_single_key_data()
+        +test_merge_composite_key_data()
+        +test_should_update_document()
+        +test_is_content_different()
+        +test_store_data_missing_keys()
+    }
+
+    class Test_Pipeline {
+        +test_run_no_new_data()
+        +test_run_with_partial_data()
+        +test_run_api_error_retry_with_backoff()
+        +test_run_unexpected_error()
+        +test_last_run_date_persistence()
+        +test_run_data_processor_error()
+        +test_run_data_storage_error()
+        +test_concurrent_runs()
+    }
+
+    Test_Client_API : Récupération des données
+    Test_Client_API : Gestion des erreurs API
+    Test_Client_API : Intégration et transformation
+    Test_Client_API : Robustesse face aux données incorrectes
+
+    Test_Data_Storage : Opérations de stockage
+    Test_Data_Storage : Gestion des erreurs stockage
+    Test_Data_Storage : Logique de fusion des données
+    Test_Data_Storage : Décision de mise à jour
+    Test_Data_Storage : Robustesse face aux données incorrectes ou manquantes
+
+    Test_Pipeline : Exécution du pipeline
+    Test_Pipeline : Gestion des erreurs et reprises
+    Test_Pipeline : Sauvegarde de fichier last_run
+    Test_Pipeline : Erreurs spécifiques aux composants
+    Test_Pipeline : Scénarios concurrents
+					</pre>
+				</div>
+			</section>
+			<section>
+				<h2>Le Prototype</h2>
+				<h4>Limitations</h4>
+				<img src="dist/imgs/limitations.png" alt="" style="height: auto;"><br>
+				<small><a href="https://bsscommerce.com/blog/3-biggest-limitations-of-related-product-in-magento-2/" target="_blank">source</a></small>
+			</section>
+			<section>
+				<h2>Le Prototype</h2>
+				<h4>Démonstration</h4>
+				<img src="dist/imgs/demo.jpg" alt="" style="height: auto;"><br>
+				<small><a href="https://stock.adobe.com/ca/search?k=online+demo" target="_blank">source</a></small>
+			</section>     
+			<section>
+				<h2>Pipeline de Production proposée</h2>
+				<img src="dist/imgs/diagram.jpg" alt=""style="height: auto;">
+			</section>
+			<section>
+				<section>
+					<h2>Métriques de monitoring</h2>
+					<h4>Performance et efficacité</h4>
+					<ul>
+						<li>Temps d'exécution total du pipeline</li>
+						<li>Temps d'exécution par composant (extraction, transformation, chargement)</li>
+						<li>Débit de données (nombre d'enregistrements traités par seconde)</li>
+						<li>Utilisation des ressources (CPU, RAM, stockage, réseau)</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Métriques de monitoring</h2>
+					<h4>Qualité et intégrité des données</h4>
+					<ul>
+						<li>Nombre de lignes traitées vs nombre de lignes attendues</li>
+						<li>Taux d'erreurs de validation des données</li>
+						<li>Nombre de valeurs nulles ou manquantes</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Métriques de monitoring</h2>
+					<h4>Latence et fraîcheur des données</h4>
+					<ul>
+						<li>Délai entre la création des données sources et leur disponibilité dans le système cible</li>
+						<li>Âge des données les plus récentes dans le système</li>
+					</ul>
+
+				</section>
+				<section>
+					<h2>Métriques de monitoring</h2>
+					<h4>Volumétrie</h4>
+					<ul>
+						<li>Volume total de données traitées</li>
+						<li>Taux de croissance des données</li>
+						<li>Utilisation de l'espace de stockage</li>
+					</ul>
+				</section>
+
+			</section>
+			<section>
+				<h2>Calcul automatique des recommendations</h2>
+				<div class="mermaid mermaid-test">
+					<pre>
+						graph TD
+						A[Application MooVitamix<br>Demande de recommandations<br>ID utilisateur + données brutes] -->|Requête API| B[API de recommandation<br>Point d'entrée du système]
+						B -->|Vérification cache| C{Cache Redis<br>Recommandations récentes?}
+						C -->|Oui: Cache hit| D[Retourner recommandations<br>du cache]
+						C -->|Non: Cache miss| E[Prétraitement des données<br>Élimination du train-serve skew]
+						E --> F[Prédiction service FastAPI<br>Génération des recommandations]
+						F -->|Utilise| G[Modèle MLflow<br>Modèle de recommandation entraîné]
+						F --> H[Enregistrement des recommandations<br>pour utilisation ultérieure]
+						H --> I[(Base de données PostgreSQL<br>Stockage à long terme)]
+						F --> J[Mise en cache<br>des nouvelles recommandations]
+						J --> K[(Cache Redis<br>Stockage temporaire<br>pour accès rapide)]
+						F --> L[Préparation de la réponse<br>Formatage des recommandations]
+						D --> M[API renvoie les recommandations<br>à l'application]
+						L --> M
+						M --> A
+					
+						subgraph "Monitoring et Analyse"
+							N[Monitoring Prometheus<br>Suivi des performances<br>et des métriques]
+							O[Analyse ELK Stack<br>Logs et analyse approfondie]
+						end
+					
+						I -.-> N
+						I -.-> O
+					</pre>
+				</div>
+			</section>
+			<section>
+				<h2>Ré-entraînement automatique du modèle</h2>
+				<div class="mermaid mermaid-test">
+					<pre>
+						graph LR
+						subgraph "Scénario 1: Pull Request"
+							A[Data Scientist] -->|Crée| B[Pull Request]
+							B -->|Merge| C[Git Repository]
+							C -->|Déclenche| D[Jenkins CI/CD]
+						end
+					
+						subgraph "Scénario 2: Data Drift Detection"
+							E[ETL Quotidien] -->|Nouvelles données| F[PostgreSQL Input Storage]
+							F -->|Analyse| G[Data Drift Detection]
+							G -->|Si drift détecté| H{Déclencher Réentraînement?}
+						end
+					
+						subgraph "Scénario 3: Planification"
+							I[Airflow] -->|Planification mensuelle| J{Déclencher Réentraînement?}
+						end
+					
+						D -->|Déclenche| K[Processus de Réentraînement]
+						H -->|Oui| K
+						J -->|Oui| K
+					
+						K -->|Utilise| F
+						K --> L[Entraînement sur Serveur Dédié]
+						L -->|Utilise| M[MLflow]
+						M --> N[Évaluation du Modèle]
+						N --> O{Performance Acceptable?}
+						O -->|Oui| P[Tag Staging]
+						P --> Q[Déploiement en Staging]
+						Q --> R[Tests en Staging]
+						R -->|Si validé| S[Tag Production]
+						S --> T[Déploiement en Production]
+					
+						U[Monitoring: Prometheus/ELK] -.-> K
+						U -.-> N
+						U -.-> R
+						U -.-> T
+					
+						V[FastAPI Prediction Service] -.->|Utilise| T
+					</pre>
+				</div>
+			</section>
+			<section></section>
+				<h2>Questions</h2>
+				<img src="dist/imgs/questions.jpg" alt="" style="height: auto;"><br>
+			</section>
+        </div>
+    </div>
+
+    <!-- Scripts de reveal.js -->
+    <script src="dist/reveal.js"></script>
+    <script src="plugin/zoom/zoom.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/search/search.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/reveal.js-mermaid-plugin@2.3.0/plugin/mermaid/mermaid.js"></script>
+
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            center: true,
+            hash: true,
+			// mermaid initialize config
+            // Configuration des plugins
+            plugins: [RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight, RevealMermaid]
+        });
+    </script>
+
+</body>
+
+</html>
